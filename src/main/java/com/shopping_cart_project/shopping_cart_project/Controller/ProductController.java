@@ -7,22 +7,31 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("api/product")
 public class ProductController {
-    // 调用 service層方法添加商品
+    // 調用 service層方法添加商品
     private final ProductService productService;
     //建構式
     public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
-    //新增
+    //新增(單一或批次)
     @PostMapping("/")
-    public ResponseEntity<Product> addProduct (@RequestBody Product product){
-        Product newProduct = productService.addProduct(product);
+    public ResponseEntity<List<Product>> addProducts (@RequestBody Product[] products){
+        //用陣列來裝，new出一個空間
+        List<Product> newProducts = new ArrayList<>();
+        //for迴圈 將要新增的商品一一放入
+        for(Product product : products) {
+            Product p = productService.addProduct(product);
+            newProducts.add(p);
+        }
         //返回新增的商品數據並設置HTTP狀態 201 (Created)
-        return new ResponseEntity<>(newProduct,HttpStatus.CREATED);
+        return new ResponseEntity<>(newProducts,HttpStatus.CREATED);
     }
 
     //刪除
