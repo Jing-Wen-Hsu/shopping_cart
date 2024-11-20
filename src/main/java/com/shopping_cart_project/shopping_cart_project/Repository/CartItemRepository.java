@@ -14,5 +14,4 @@ public interface CartItemRepository extends JpaRepository<CartItem,Long> {
     //查看購物車，是否已經有同樣的商品了，避免重複加入
 @Query("SELECT ci FROM CartItem ci WHERE ci.cart = :cart AND ci.product = :product")
     public CartItem isCartItemInCart(@Param("cart") Cart cart, @Param("product")Product product);
-
 }

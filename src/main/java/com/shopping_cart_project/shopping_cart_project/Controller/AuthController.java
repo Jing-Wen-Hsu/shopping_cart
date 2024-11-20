@@ -3,8 +3,10 @@ package com.shopping_cart_project.shopping_cart_project.Controller;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.shopping_cart_project.shopping_cart_project.Config.JWTProvider;
 
+import com.shopping_cart_project.shopping_cart_project.Entity.Cart;
 import com.shopping_cart_project.shopping_cart_project.Entity.User;
 import com.shopping_cart_project.shopping_cart_project.Response.AuthResponse;
+import com.shopping_cart_project.shopping_cart_project.Service.CartService;
 import com.shopping_cart_project.shopping_cart_project.Service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +19,15 @@ public class AuthController {
     private final JWTProvider jwtProvider;
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
+    private final CartService cartService;
 
 
     //建構式
-    public AuthController(JWTProvider jwtProvider, UserService userService, PasswordEncoder passwordEncoder) {
+    public AuthController(JWTProvider jwtProvider, UserService userService, PasswordEncoder passwordEncoder, CartService cartService) {
         this.jwtProvider = jwtProvider;
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.cartService = cartService;
     }
 
     //註冊
@@ -40,6 +44,8 @@ public class AuthController {
         AuthResponse authResponse = new AuthResponse();
         authResponse.setJwt(token);
         authResponse.setMessage("Signup Success");
+        //註冊成功同時創建用戶購物車
+        Cart cart = cartService.createCart(userService.findUserByEmail(user.getEmail()));
 
         return new ResponseEntity<>(authResponse, HttpStatus.CREATED);
     }
