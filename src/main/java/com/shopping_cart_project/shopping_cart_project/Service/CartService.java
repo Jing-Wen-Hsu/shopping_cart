@@ -49,7 +49,7 @@ public class CartService {
             cartItem.setQuantity(req.getQuantity()); //set購買數量
             cartItem.setPrice(req.getQuantity() * product.getPrice()); //單一商品金額小計
             //將商品加入購物車
-            CartItem createCartItem = cartItemService.createCartIitem(cartItem);
+            CartItem createCartItem = cartItemService.createCartItem(cartItem);
             //將此新增的 CartItem 加入購物車的 cartItems 清單中。
             cart.getCartItems().add(createCartItem);
             //調用 calcCartTotal 方法重新計算購物車總金額。
