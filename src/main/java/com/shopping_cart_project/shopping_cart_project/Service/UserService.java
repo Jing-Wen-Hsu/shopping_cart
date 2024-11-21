@@ -2,10 +2,13 @@ package com.shopping_cart_project.shopping_cart_project.Service;
 
 
 import com.shopping_cart_project.shopping_cart_project.Config.JWTProvider;
+import com.shopping_cart_project.shopping_cart_project.Entity.CartItem;
 import com.shopping_cart_project.shopping_cart_project.Entity.User;
 import com.shopping_cart_project.shopping_cart_project.Repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -55,7 +58,13 @@ public class UserService {
         return user;
     }
 
-
-
+    //依據id查詢用戶
+    public User findUserById(Long id) throws Exception{
+        Optional<User> opt = userRepository.findById(id);
+        if(opt.isPresent()){
+            return opt.get();
+        }
+        throw new Exception("Error: User not found with id: " + id);
+    }
 
 }
