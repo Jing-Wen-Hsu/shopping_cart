@@ -8,6 +8,8 @@ import com.shopping_cart_project.shopping_cart_project.Repository.CartRepository
 import com.shopping_cart_project.shopping_cart_project.Request.AddItemRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.Iterator;
+
 @Service
 public class CartService {
     private final CartRepository cartRepository;
@@ -53,5 +55,43 @@ public class CartService {
             //調用 calcCartTotal 方法重新計算購物車總金額。
             calcCartTotal(userId);
         }
+    }
+
+    //計算購物車內的商品數量和價格
+    public Cart calcCartTotal(Long userId){
+        //獲取用戶購物車
+        Cart cart = cartRepository.findCartByUserId(userId);
+        //totalPrice、totalQuantity用於儲存購物車內所有商品的總金額及總數量。
+            //初始的商品數量及價格皆預設為0。
+        int totalPrice = 0 ;
+        int totalQuantity = 0 ;
+
+        for (CartItem cartItem : cart.getCartItems()){
+            totalPrice += cartItem.getPrice();
+            totalPrice += cartItem.getQuantity();
+        }
+
+        cart.setTotalPrice(totalPrice);
+        cart.setTotalQuantity(totalQuantity);
+        return cartRepository.save(cart);
+    }
+
+    //清除購物車 ->清空購物車中的商品，重新設定購物車的總價格、總商品數為0，並返回商品總額。
+    public Integer clearCart (Long userId) throws Exception{
+        //找出用戶的購物車
+        Cart cart = cartRepository.findCartByUserId(userId);
+        Integer totalPrice = cart.getTotalPrice(); //取得當前用戶購物車的總額
+        //使用 Iterator 迭代器，遍歷購物車中的商品，進行移除
+        Iterator<CartItem> iterator = cart.getCartItems().iterator();
+        while (iterator.hasNext()) {  //hasNext() 檢查集合中是否還有下一個元素
+            CartItem cartItem = iterator.next(); //next() 返回集合中的下一個元素。
+            cartItemService.removeCartItem(userId,cartItem.getId()); //從資料庫中刪除。
+            iterator.remove(); //從集合移除
+        }
+        cart.setTotalPrice(0);
+        cart.setTotalQuantity(0);
+        cartRepository.save(cart);
+
+        return totalPrice;
     }
 }
