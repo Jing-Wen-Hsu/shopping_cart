@@ -91,6 +91,13 @@
 			<version>5.2.2</version>
 		</dependency>
 
+<!--		添加Stripe SDK-->
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>26.0.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
