@@ -2,8 +2,10 @@ package com.shopping_cart_project.shopping_cart_project.Service;
 
 import com.shopping_cart_project.shopping_cart_project.Entity.Order;
 import com.shopping_cart_project.shopping_cart_project.Repository.OrderRepository;
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.param.checkout.SessionCreateParams;
+import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.stereotype.Service;
 import com.stripe.model.checkout.Session;
 
@@ -16,9 +18,13 @@ import java.util.Optional;
 public class OrderService {
     private final OrderRepository orderRepository;
 
-    public OrderService(OrderRepository orderRepository) {
+    public OrderService(OrderRepository orderRepository){
         this.orderRepository = orderRepository;
+        Dotenv dotenv = Dotenv.load();
+        //設定Stripe的私鑰，沒有私鑰就無法產生支付連結。
+        Stripe.apiKey = dotenv.get("STRIPE_PRIVATE_KEY");
     }
+
     // 建立Stripe支付的session
         //import Session時選擇com.stripe.model.checkout
     public Session createCheckoutSession(int amount) throws StripeException {
