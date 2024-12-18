@@ -3,7 +3,7 @@ package com.shopping_cart_project.shopping_cart_project.Entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "order")
+@Table(name = "orders")
 public class Order {
 
     @Id
