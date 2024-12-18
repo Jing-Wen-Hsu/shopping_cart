@@ -68,7 +68,7 @@ public class CartService {
 
         for (CartItem cartItem : cart.getCartItems()){
             totalPrice += cartItem.getPrice();
-            totalPrice += cartItem.getQuantity();
+            totalQuantity += cartItem.getQuantity();
         }
 
         cart.setTotalPrice(totalPrice);
